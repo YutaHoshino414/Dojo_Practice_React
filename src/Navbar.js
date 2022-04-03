@@ -7,7 +7,7 @@ const Navbar = () => {
         <a href="/create">New Blog</a>
       </div>
     </div>
-   );
+  );
 }
- 
+
 export default Navbar;
