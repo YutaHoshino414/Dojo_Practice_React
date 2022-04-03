@@ -1,29 +1,15 @@
 import { useState, useEffect } from "react";
 import BlogList from "./BlogList";
+import useFetch from "./useFetch";
 
 const Home = () => {
-  const [blogs, setBlogs] = useState(null);
-
-  /* const handleDelete = (id) =>{
-    const newBlogs = blogs.filter(blog => blog.id !== id)
-    setBlogs(newBlogs)
-  } */
-
-  useEffect( () =>{
-    fetch('http://localhost:8000/blogs')
-    .then(res =>{
-      return res.json();
-    })
-    .then(data =>{
-      console.log(data);
-      setBlogs(data)
-    });
-  },[]);     /* [ Dependency ]内に指定した条件をトリガーに、起こす "Side Effect" */
+  const { data:blogs, isPending, error} = useFetch(' http://localhost:8000/blogs');  /* カスタムフック */
 
   return ( 
     <div className="home">
-      {blogs && <BlogList blogs={blogs} title="All Blogs" />}  {/* propsに関数渡せる：handleDelete={handleDelete} */}
-      
+      { error && <div>{ error }</div> }
+      { isPending && <div className="">Loading...</div> }      {/* when { here:Ture &&(then) here:is show  */}
+      { blogs && <BlogList blogs={blogs} title="All Blogs" />}
     </div>
   );
 }
