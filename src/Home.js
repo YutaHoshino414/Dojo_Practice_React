@@ -2,7 +2,8 @@ import BlogList from "./BlogList";
 import useFetch from "./useFetch";
 
 const Home = () => {
-  const { data:blogs, isPending, error} = useFetch(' http://localhost:8000/blogs');  /* カスタムフック */
+  const url = 'http://localhost:8000/blogs'
+  const { data:blogs, isPending, error} = useFetch(url);  /* カスタムフック */
 
   return ( 
     <div className="home">
