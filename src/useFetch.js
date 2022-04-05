@@ -7,8 +7,10 @@ const useFetch = (url) =>{
   const [error, setError] = useState(null);
 
   useEffect( () =>{
+    const abortCont = new AbortController(); /* stop the fetch  */
+
     setTimeout(()=>{
-      fetch(url)
+      fetch(url, { signal: abortCont.signal })
       .then(res =>{
         if(!res.ok){
           throw Error('tried connecting..... could not fetch the data for that resource')
@@ -21,11 +23,16 @@ const useFetch = (url) =>{
         setError(null);
       })
       .catch(err =>{
-        setIsPending(false);
-        setError(err.message);
+        if (err.name === 'AbortError'){
+          console.log('fetch stopped')
+        } else {
+          setIsPending(false);
+          setError(err.message);
+        }
       })
     }, 1000);
-  },[]);     /* [ Dependency ]内に指定した条件をトリガーに、起こす "Side Effect" */
+    return () => abortCont.abort()
+  },[url]);     /* [ Dependency ]内に指定した条件をトリガーに、起こす "Side Effect" */
 
   return {data, isPending, error}
 }
